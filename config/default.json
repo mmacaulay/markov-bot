@@ -1,0 +1,11 @@
+{
+  "server": {
+    "port": 3000,
+    "logging": {
+      "level": "info"
+    },
+    "morgan": {
+      "format": "dev"
+    }
+  }
+}
