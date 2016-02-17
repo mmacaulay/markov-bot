@@ -1,0 +1,19 @@
+{
+  "name": "markov-bot",
+  "version": "0.0.1",
+  "description": "A Markov Chain bot that wants to get to know you.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twg/markov-bot.git"
+  },
+  "author": "Matt MacAulay <mac@twg.ca>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/twg/markov-bot/issues"
+  },
+  "homepage": "https://github.com/twg/markov-bot#readme"
+}
