@@ -1,0 +1,5 @@
+test/unit
+--reporter spec
+--require test/helper.js
+--recursive
+--compilers js:babel-register
