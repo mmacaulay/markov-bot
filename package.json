@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "NODE_ENV=development node index.js",
-    "predev": "npm run build",
+    "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- index.js",
+    "prebabel-node": "npm run build",
+    "babel-node": "babel-node",
     "build": "babel src -d lib",
     "test": "mocha"
   },
@@ -22,7 +23,8 @@
   "homepage": "https://github.com/twg/markov-bot#readme",
   "devDependencies": {
     "babel-cli": "^6.5.1",
-    "babel-preset-es2015": "^6.5.0"
+    "babel-preset-es2015": "^6.5.0",
+    "nodemon": "^1.8.1"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
