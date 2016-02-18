@@ -7,7 +7,7 @@ function learnTerms (terms, callback) {
   return terms.map((term, index) => {
     const currentState = term
     const nextState = terms[index + 1]
-    return async.apply(store.storeState, currentState, nextState, { isStartWord: index === 0 })
+    return async.apply(store.storeState, currentState, nextState, { isStartTerm: index === 0 })
   })
 }
 

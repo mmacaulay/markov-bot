@@ -16,11 +16,11 @@ describe('learn', () => {
     learn(text, cb)
   })
 
-  it('tracks a list of start words', (done) => {
-    redis.smembers('__startwords__', (err, results) => {
+  it('tracks a list of start terms', (done) => {
+    redis.smembers('__startterms__', (err, results) => {
       if (err) return done(err)
-      const words = results
-      words.sort()
+      const terms = results
+      terms.sort()
       assert.deepEqual(results, ["I've", 'You'])
       done()
     })
