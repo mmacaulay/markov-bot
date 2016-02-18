@@ -9,7 +9,7 @@ const it = mocha.it
 const beforeEach = mocha.beforeEach
 
 describe('learn', () => {
-  const text = `You know what a turtle is? I've never seen a turtle... But I understand what you mean.`
+  const text = "You know what a turtle is? I've never seen a turtle... But I understand what you mean."
 
   beforeEach(redis.flushdb.bind(redis))
   beforeEach((cb) => {
