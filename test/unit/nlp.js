@@ -1,9 +1,6 @@
-import mocha from 'mocha'
+import { describe, it } from 'mocha'
 import { assert } from 'chai'
 import { tokenize } from '../../src/nlp'
-
-const describe = mocha.describe
-const it = mocha.it
 
 describe('nlp', () => {
   describe('tokenize', () => {
