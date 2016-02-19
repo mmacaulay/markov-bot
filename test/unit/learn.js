@@ -28,19 +28,19 @@ describe('learn', () => {
 
   it('creates a chain of terms from a corpus of text', (done) => {
     const chains = [{
-      key: 'You',
+      key: 'Person:You',
       text: 'know',
       score: '1'
     }, {
-      key: 'know',
+      key: 'Noun:know',
       text: 'what a',
       score: '1'
     }, {
-      key: 'what a',
+      key: 'Determiner:what a',
       text: 'turtle',
       score: '1'
     }, {
-      key: 'turtle',
+      key: 'Noun:turtle',
       text: 'is?',
       score: '1'
     }]
