@@ -1,8 +1,12 @@
 import _ from 'lodash'
 import db from './db'
 
-export function speak (callback) {
-  const store = db()
+export function speak (order, callback) {
+  if (arguments.length === 1) {
+    callback = order
+    order = 1
+  }
+  const store = db(order)
 
   function assemble (terms) {
     return terms.map((term) => {

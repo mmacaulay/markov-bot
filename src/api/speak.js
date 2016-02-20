@@ -3,8 +3,9 @@ import { speak } from '../speak'
 
 const router = express.Router()
 
-router.post('', (req, res, next) => {
-  speak((err, result) => {
+router.get('', (req, res, next) => {
+  const order = req.query.order || 1
+  speak(order, (err, result) => {
     if (err) return next(err)
     res.json({ data: result })
   })

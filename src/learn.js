@@ -33,6 +33,10 @@ export default function learn (text, opts, callback) {
     }
   }
   const orders = opts.orders || [1]
+  if (orders.indexOf(1) === -1) {
+    orders.unshift(1)
+  }
+
   const sentences = tokenize(text)
   async.parallel(_.flatten(sentences.map((sentence) => {
     return orders.map((order) => {

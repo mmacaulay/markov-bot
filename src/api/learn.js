@@ -4,7 +4,8 @@ import learn from '../learn'
 const router = express.Router()
 
 router.post('', (req, res, next) => {
-  learn(req.body.text, (err) => {
+  const orders = req.body.orders || [1]
+  learn(req.body.text, { orders: orders }, (err) => {
     if (err) return next(err)
     res.json('ok')
   })
