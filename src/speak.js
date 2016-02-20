@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import db from './db'
 
 export function speak (callback) {
@@ -12,10 +13,11 @@ export function speak (callback) {
   function createSentence (term, termsCollected, callback) {
     if (!term) return callback(null, assemble(termsCollected))
 
-    store.nextState(term, (err, result) => {
+    store.nextStates(term, (err, states) => {
       if (err) return callback(err)
-      const terms = result ? termsCollected.concat([result]) : termsCollected
-      createSentence(result, terms, callback)
+      const terms = states ? termsCollected.concat(states) : termsCollected
+      const nextTerm = states ? _.last(states) : null
+      createSentence(nextTerm, terms, callback)
     })
   }
 

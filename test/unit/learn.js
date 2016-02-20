@@ -4,6 +4,7 @@ import { assert } from 'chai'
 import learn from '../../src/learn'
 import redis from '../../src/redis'
 import _ from 'lodash'
+import { assertHasChains } from './helper'
 
 describe('learn', () => {
   const text = "You know what a turtle is? I've never seen a turtle... But I understand what you mean."
@@ -14,7 +15,7 @@ describe('learn', () => {
   })
 
   it('tracks a list of start terms', (done) => {
-    redis.smembers('__startterms__', (err, results) => {
+    redis.smembers('1:__startterms__', (err, results) => {
       if (err) return done(err)
       const terms = _.chain(results)
         .map(JSON.parse)
@@ -28,36 +29,50 @@ describe('learn', () => {
 
   it('creates a chain of terms from a corpus of text', (done) => {
     const chains = [{
-      key: 'Person:You',
-      text: 'know',
+      key: '1:Person:You:chain',
+      terms: ['know'],
       score: '1'
     }, {
-      key: 'Noun:know',
-      text: 'what a',
+      key: '1:Noun:know:chain',
+      terms: ['what a'],
       score: '1'
     }, {
-      key: 'Determiner:what a',
-      text: 'turtle',
+      key: '1:Determiner:what a:chain',
+      terms: ['turtle'],
       score: '1'
     }, {
-      key: 'Noun:turtle',
-      text: 'is?',
+      key: '1:Noun:turtle:chain',
+      terms: ['is?'],
       score: '1'
     }]
 
-    const fns = chains.map((chain) => {
-      return (cb) => {
-        redis.zscan([`${chain.key}:chain`, 0], (err, result) => {
-          if (err) return cb(err)
-          assert.equal(result[1][1], chain.score)
+    assertHasChains(chains, done)
+  })
 
-          const value = JSON.parse(result[1][0])
-          assert.equal(value.text, chain.text)
-          cb()
-        })
-      }
-    })
+  it('uses higher order markov chains', (done) => {
+    const chains = [{
+      key: '1:Person:You:chain',
+      terms: ['know'],
+      score: '1'
+    }, {
+      key: '2:Person:You:chain',
+      terms: ['know', 'what a'],
+      score: '1'
+    }, {
+      key: '1:Noun:know:chain',
+      terms: ['what a'],
+      score: '1'
+    }, {
+      key: '2:Noun:know:chain',
+      terms: ['what a', 'turtle'],
+      score: '1'
+    }]
 
-    async.parallel(fns, done)
+    const fns = [
+      async.apply(redis.flushdb.bind(redis)),
+      async.apply(learn, text, { orders: [1, 2] }),
+      async.apply(assertHasChains, chains)
+    ]
+    async.series(fns, done)
   })
 })

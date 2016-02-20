@@ -1,9 +1,10 @@
 import async from 'async'
+import _ from 'lodash'
 import { tokenize } from './nlp'
 import db from './db'
 
-function learnTerms (terms, callback) {
-  const store = db()
+function learnTerms (terms, order, callback) {
+  const store = db(order)
   const filteredTerms = terms.filter((term) => {
     // Filter out terms that don't have a text component.
     // These arise when there is a contraction; the NLP library
@@ -12,20 +13,30 @@ function learnTerms (terms, callback) {
   })
   return filteredTerms.map((term, index) => {
     const currentState = term
-    const nextState = filteredTerms[index + 1]
+    const nextIndex = index + 1
 
-    return async.apply(store.storeState, currentState, nextState, { isStartTerm: index === 0 })
+    const nextStates = filteredTerms.slice(nextIndex, nextIndex + order)
+    return async.apply(store.storeState, currentState, nextStates, { isStartTerm: index === 0 })
   })
 }
 
-function learnSentence (sentence, callback) {
-  var fns = learnTerms(sentence.terms, callback)
+function learnSentence (sentence, order, callback) {
+  const fns = learnTerms(sentence.terms, order, callback)
   async.series(fns, callback)
 }
 
-export default function learn (text, callback) {
+export default function learn (text, opts, callback) {
+  if (arguments.length === 2) {
+    callback = opts
+    opts = {
+      orders: [1]
+    }
+  }
+  const orders = opts.orders || [1]
   const sentences = tokenize(text)
-  async.parallel(sentences.map((sentence) => {
-    return async.apply(learnSentence, sentence)
-  }), callback)
+  async.parallel(_.flatten(sentences.map((sentence) => {
+    return orders.map((order) => {
+      return async.apply(learnSentence, sentence, order)
+    })
+  })), callback)
 }
