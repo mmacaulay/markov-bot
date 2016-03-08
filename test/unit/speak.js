@@ -17,7 +17,7 @@ describe('speak', () => {
     const possibleStartTerms = ['You', "I've"]
     speak((err, result) => {
       if (err) return done(err)
-      assert.isTrue(_.any(possibleStartTerms, (term) => {
+      assert.isTrue(_.some(possibleStartTerms, (term) => {
         return result.indexOf(term) === 0
       }))
       done()
@@ -31,7 +31,7 @@ describe('speak', () => {
     ]
     speak((err, result) => {
       if (err) return done(err)
-      assert.isTrue(_.any(possibleSentences, (sentence) => {
+      assert.isTrue(_.some(possibleSentences, (sentence) => {
         return result === sentence
       }), result)
       done()

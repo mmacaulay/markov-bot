@@ -6,7 +6,7 @@ export function speak (order, callback) {
     callback = order
     order = 1
   }
-  const store = db(order)
+  const store = db('all', order)
 
   function assemble (terms) {
     return terms.map((term) => {

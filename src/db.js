@@ -4,15 +4,13 @@ import { weightedRandom } from './math'
 
 const startTermsKey = '__startterms__'
 
-export default function getStore (order) {
-  const prefix = order || 1
-
+export default function getStore (prefix, order) {
   function chainKey (term) {
-    return `${prefix}:${term.tag}:${term.text}:chain`
+    return `${prefix}:${order}:${term.tag}:${term.text}:chain`
   }
 
   function startKey () {
-    return `${prefix}:${startTermsKey}`
+    return `${prefix}:${order}:${startTermsKey}`
   }
 
   function storeState (state, nextStates, opts, callback) {
