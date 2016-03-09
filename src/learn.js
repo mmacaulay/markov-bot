@@ -41,7 +41,7 @@ export default function learn (text, opts, callback) {
     orders.unshift(1)
   }
 
-  const namespaces = ['all'].concat(opts.namespaces ? opts.namespaces : [])
+  const namespaces = _.uniq(['all'].concat(opts.namespaces ? opts.namespaces : []))
 
   const sentences = tokenize(text)
   async.parallel(sentences.map((sentence) => {

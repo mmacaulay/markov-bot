@@ -5,7 +5,8 @@ const router = express.Router()
 
 router.post('', (req, res, next) => {
   const orders = req.body.orders || [1]
-  learn(req.body.text, { orders: orders }, (err) => {
+  const namespaces = req.body.namespaces || []
+  learn(req.body.text, { orders: orders, namespaces: namespaces }, (err) => {
     if (err) return next(err)
     res.json('ok')
   })

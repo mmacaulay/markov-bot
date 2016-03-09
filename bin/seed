@@ -7,12 +7,14 @@ var program = require('commander')
 var defaultUrl = 'http://localhost:3000/learn'
 
 program.usage('[options] <file>')
-  .option('-o, --orders [n]', 'Specify order (default 1), accepts multiple comma separated values')
+  .option('-o, --orders [orders]', 'Specify order (default 1), accepts multiple comma separated values')
+  .option('-n, --namespaces [namespaces]', 'Specify namespaces (default none), accepts multiple comma separated values')
   .option('-u, --url [url]', `URL to POST to (default ${defaultUrl})`)
   .parse(process.argv)
 
 if (program.args.length === 1) {
   var orders = program.orders || '1'
+  var namespaces = program.namespaces
   var url = program.url || defaultUrl
   var text = fs.readFileSync(program.args[0], { encoding: 'utf8' })
 
@@ -22,6 +24,7 @@ if (program.args.length === 1) {
       orders: orders.split(',').map((o) => {
         return parseInt(o, 10)
       }),
+      namespaces: namespaces ? namespaces.split(',') : null,
       text: text
     }
   }, function (err, response) {

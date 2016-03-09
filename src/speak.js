@@ -1,12 +1,20 @@
 import _ from 'lodash'
 import db from './db'
 
-export function speak (order, callback) {
+const defaultOpts = {
+  order: 1,
+  namespace: 'all'
+}
+
+export function speak (opts, callback) {
   if (arguments.length === 1) {
-    callback = order
-    order = 1
+    callback = opts
+    opts = defaultOpts
   }
-  const store = db('all', order)
+  opts = opts || {}
+  const order = opts.order || 1
+  const namespace = opts.namespace || 'all'
+  const store = db(namespace, order)
 
   function assemble (terms) {
     return terms.map((term) => {
