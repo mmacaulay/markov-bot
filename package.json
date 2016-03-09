@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- src/server.js",
+    "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- src/index.js",
     "babel-node": "babel-node",
     "build": "babel src -d lib",
     "test": "standard && mocha"
