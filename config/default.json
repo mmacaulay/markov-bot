@@ -14,6 +14,7 @@
   },
   "slack": {
     "api": "http://localhost:3000",
-    "orders":  [1, 2, 3]
+    "orders":  [1, 2, 3],
+    "bot_username": "markov_bot"
   }
 }

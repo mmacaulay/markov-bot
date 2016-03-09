@@ -9,5 +9,10 @@ rtm.start()
 rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   // ignore messages that have a subtype
   if (message.subtype) return
-  learn(message)
+
+  // don't learn messages that are addressing me
+  const botUsernamePattern = new RegExp('^\s*[@]?' + config.slack.bot_username + '[:]?')
+  if (!botUsernamePattern.test(message.text)) {
+    learn(message)
+  }
 })
