@@ -1,0 +1,6 @@
+{
+  "slack": {
+    "token": "SLACK_TOKEN",
+    "api": "SLACK_API"
+  }
+}
