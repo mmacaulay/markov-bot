@@ -21,7 +21,7 @@ export default function getStore (prefix, order) {
     }
 
     const key = chainKey(state)
-    if (nextStates) {
+    if (nextStates && nextStates.length) {
       fns.push(async.apply(redis.zincrby.bind(redis), key, 1, JSON.stringify(nextStates)))
     }
 
