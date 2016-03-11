@@ -1,6 +1,6 @@
 import async from 'async'
 import _ from 'lodash'
-import { tokenize } from './nlp'
+import nlp from 'nlp_compromise'
 import db from './db'
 
 function learnTerms (terms, order, namespace, callback) {
@@ -21,11 +21,17 @@ function learnTerms (terms, order, namespace, callback) {
 }
 
 function learnSentence (sentence, orders, namespaces, callback) {
-  const fns = _.flatten(orders.map((order) => {
-    return namespaces.map((namespace) => {
-      return async.apply(learnTerms, sentence.terms, order, namespace)
-    })
-  }))
+  const fns = orders.reduce((fns, order) => {
+    return fns.concat(_.flatten(namespaces.map((namespace) => {
+      const reverseNamespace = `reverse:${namespace}`
+      const reverseTerms = sentence.terms.slice()
+      reverseTerms.reverse()
+      return [
+        async.apply(learnTerms, sentence.terms, order, namespace),
+        async.apply(learnTerms, reverseTerms, order, reverseNamespace)
+      ]
+    })))
+  }, [])
   async.parallel(fns, callback)
 }
 
@@ -43,7 +49,7 @@ export default function learn (text, opts, callback) {
 
   const namespaces = _.uniq(['all'].concat(opts.namespaces ? opts.namespaces : []))
 
-  const sentences = tokenize(text)
+  const sentences = nlp.text(text).sentences
   async.parallel(sentences.map((sentence) => {
     return async.apply(learnSentence, sentence, orders, namespaces)
   }), callback)

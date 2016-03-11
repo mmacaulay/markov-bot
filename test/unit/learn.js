@@ -49,6 +49,28 @@ describe('learn', () => {
     assertHasChains(chains, done)
   })
 
+  it('stores chains without context', (done) => {
+    const chains = [{
+      key: 'all:1:You:chain',
+      terms: ['know'],
+      score: '1'
+    }, {
+      key: 'all:1:know:chain',
+      terms: ['what a'],
+      score: '1'
+    }, {
+      key: 'all:1:what a:chain',
+      terms: ['turtle'],
+      score: '1'
+    }, {
+      key: 'all:1:turtle:chain',
+      terms: ['is?'],
+      score: '1'
+    }]
+
+    assertHasChains(chains, done)
+  })
+
   it('uses higher order markov chains', (done) => {
     const chains = [{
       key: 'all:1:Person:You:chain',
@@ -109,5 +131,27 @@ describe('learn', () => {
       async.apply(assertHasChains, chains)
     ]
     async.series(fns, done)
+  })
+
+  it('stores reverse chains', (done) => {
+    const chains = [{
+      key: 'reverse:all:1:Copula:is?:chain',
+      terms: ['turtle'],
+      score: '1'
+    }, {
+      key: 'reverse:all:1:Noun:turtle:chain',
+      terms: ['what a'],
+      score: '1'
+    }, {
+      key: 'reverse:all:1:Determiner:what a:chain',
+      terms: ['know'],
+      score: '1'
+    }, {
+      key: 'reverse:all:1:Noun:know:chain',
+      terms: ['You'],
+      score: '1'
+    }]
+
+    assertHasChains(chains, done)
   })
 })

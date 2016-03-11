@@ -5,8 +5,12 @@ import { weightedRandom } from './math'
 const startTermsKey = '__startterms__'
 
 export default function getStore (prefix, order) {
-  function chainKey (term) {
+  function contextKey (term) {
     return `${prefix}:${order}:${term.tag}:${term.text}:chain`
+  }
+
+  function contextLessKey (term) {
+    return `${prefix}:${order}:${term.text}:chain`
   }
 
   function startKey () {
@@ -20,9 +24,9 @@ export default function getStore (prefix, order) {
       fns.push(async.apply(redis.sadd.bind(redis), startKey(), JSON.stringify(state)))
     }
 
-    const key = chainKey(state)
     if (nextStates && nextStates.length) {
-      fns.push(async.apply(redis.zincrby.bind(redis), key, 1, JSON.stringify(nextStates)))
+      fns.push(async.apply(redis.zincrby.bind(redis), contextKey(state), 1, JSON.stringify(nextStates)))
+      fns.push(async.apply(redis.zincrby.bind(redis), contextLessKey(state), 1, JSON.stringify(nextStates)))
     }
 
     async.series(fns, callback)
@@ -35,8 +39,12 @@ export default function getStore (prefix, order) {
     })
   }
 
+  function hasContext (term) {
+    return term.tag && term.tag !== '?'
+  }
+
   function nextStates (term, callback) {
-    const key = chainKey(term)
+    const key = hasContext(term) ? contextKey(term) : contextLessKey(term)
     redis.zrevrange([key, 0, 50, 'WITHSCORES'], (err, results) => {
       if (err) return callback(err)
       const collated = collateRangeResults(results)
