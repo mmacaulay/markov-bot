@@ -119,7 +119,7 @@ describe('speakAbout', () => {
 
   beforeEach(redis.flushdb.bind(redis))
   beforeEach((cb) => {
-    learn(text, cb)
+    learn(text, { orders: [1, 2, 3] }, cb)
   })
 
   it('creates a sentence containing a specific word', (done) => {
@@ -133,7 +133,7 @@ describe('speakAbout', () => {
     ]
     async.times(100, (n, next) => {
       speakAbout('cow', (err, result) => {
-        if (err) return done(err)
+        if (err) return next(err)
         assert.isTrue(_.some(possibleSentences, (sentence) => {
           return result === sentence
         }), result)
@@ -148,6 +148,49 @@ describe('speakAbout', () => {
       done()
     })
   })
-  it('can specify an order')
-  it('can specify a namespace')
+  it('can specify an order', (done) => {
+    const possibleSentences = [
+      'The cow jumped over the moon.',
+      "This cow thinks it's a dog.",
+      'This cow jumped over the moon.',
+      "The cow thinks it's a dog."
+    ]
+    async.times(100, (n, next) => {
+      speakAbout('cow', { order: 3 }, (err, result) => {
+        if (err) return next(err)
+        assert.isTrue(_.some(possibleSentences, (sentence) => {
+          return result === sentence
+        }), result)
+        next()
+      })
+    }, done)
+  })
+  it('can specify a namespace', (done) => {
+    const ns1Text = 'The quick brown fox jumps over the lazy dog.'
+    const ns2Text = 'The cow jumped over the moon.'
+    const fns = [
+      async.apply(redis.flushdb.bind(redis)),
+      async.apply(learn, ns1Text, { namespaces: ['ns1'] }),
+      async.apply(learn, ns2Text, { namespaces: ['ns2'] }),
+      function (cb) {
+        async.times(100, (n, next) => {
+          speakAbout('fox', { namespace: 'ns1' }, (err, result) => {
+            if (err) return next(err)
+            assert.equal(result, ns1Text)
+            next()
+          })
+        }, cb)
+      },
+      function (cb) {
+        async.times(100, (n, next) => {
+          speakAbout('cow', { namespace: 'ns2' }, (err, result) => {
+            if (err) return next(err)
+            assert.equal(result, ns2Text)
+            next()
+          })
+        }, cb)
+      }
+    ]
+    async.series(fns, done)
+  })
 })
