@@ -10,7 +10,7 @@ export default function getStore (prefix, order) {
   }
 
   function contextLessKey (term) {
-    return `${prefix}:${order}:${term.text}:chain`
+    return `${prefix}:${order}:${term.normal}:chain`
   }
 
   function startKey () {

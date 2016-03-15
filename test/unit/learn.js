@@ -49,10 +49,10 @@ describe('learn', () => {
     assertHasChains(chains, done)
   })
 
-  it('stores chains without context', (done) => {
+  it('stores normalized chains for terms without context', (done) => {
     const chains = [{
-      key: 'all:1:You:chain',
-      terms: ['know'],
+      key: 'all:1:you:chain',
+      terms: ['mean.', 'know'],
       score: '1'
     }, {
       key: 'all:1:know:chain',
