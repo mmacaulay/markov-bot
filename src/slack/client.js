@@ -51,10 +51,6 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
     if (myUsernameRe.test(message.text)) {
       const command = message.text.replace(myUsernameRe, '').trim().toLowerCase()
 
-      if (command === 'speak') {
-        return speak(message.channel)
-      }
-
       const whatWouldUserIDSayAboutMatch = whatWouldUserIDSayAboutRe.exec(command)
       if (whatWouldUserIDSayAboutMatch) {
         const userId = whatWouldUserIDSayAboutMatch[1]
@@ -102,6 +98,9 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const about = tellMeAboutMatch[1]
         return speakAbout(message.channel, about)
       }
+
+      // default action when addressed is just speak.
+      speak(message.channel)
     } else {
       learn(message)
     }
