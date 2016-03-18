@@ -10,8 +10,8 @@ export function assertHasChains (chains, callback) {
         assert.equal(result[1][1], chain.score, `${chain.key} score`)
 
         const value = JSON.parse(result[1][0])
-        value.forEach((term, index) => {
-          assert.equal(term.text, chain.terms[index], `${chain.key} text`)
+        value.forEach((term) => {
+          assert.isTrue(chain.terms.indexOf(term.text) > -1)
         })
         cb()
       })
