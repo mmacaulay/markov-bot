@@ -8,7 +8,6 @@
     "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- index.js",
     "babel-node": "babel-node",
     "build": "babel src -d lib",
-    "release": "zip -r releases/current.zip . -x \".git/*\"",
     "test": "NODE_ENV=test standard && mocha"
   },
   "repository": {
