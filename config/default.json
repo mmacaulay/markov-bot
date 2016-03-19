@@ -1,22 +1,23 @@
 {
-  "server": {
+  "api": {
     "port": 3000,
     "logging": {
       "level": "info"
     },
     "morgan": {
       "format": "dev"
-    },
-    "redis": {
-      "host": "127.0.0.1",
-      "port": 6379
     }
   },
   "slack": {
     "api": "http://localhost:3000",
+    "token": "<INSERT_TOKEN>",
     "learn_orders":  [1, 2, 3],
     "speak_order": 2,
     "bot_username": "markov_bot",
     "users_max_age": 86400000
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379
   }
 }

@@ -4,16 +4,16 @@ import config from 'config'
 import bodyParser from 'body-parser'
 import fs from 'fs'
 
-const serverConfig = config.server
-const port = serverConfig.port
+const apiConfig = config.api
+const port = apiConfig.port
 const app = express()
 
 let morganOpts = {}
-if (serverConfig.morgan.accessLog) {
-  morganOpts.stream = fs.createWriteStream(serverConfig.morgan.accessLog, { flags: 'a' })
+if (apiConfig.morgan.accessLog) {
+  morganOpts.stream = fs.createWriteStream(apiConfig.morgan.accessLog, { flags: 'a' })
 }
 
-app.use(morgan(serverConfig.morgan.format, morganOpts))
+app.use(morgan(apiConfig.morgan.format, morganOpts))
 app.use(bodyParser.json({ limit: '100000kb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.disable('etag')

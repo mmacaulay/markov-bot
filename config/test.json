@@ -1,7 +1,5 @@
 {
-  "server": {
-    "redis": {
-      "database": 1
-    }
+  "redis": {
+    "database": 1
   }
 }

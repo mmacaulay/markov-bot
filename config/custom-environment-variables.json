@@ -1,6 +1,20 @@
 {
+  "api": {
+    "port": "API_PORT",
+    "logging": {
+      "level": "API_LOGGING_LEVEL"
+    },
+    "morgan": {
+      "format": "API_MORGAN_FORMAT"
+    }
+  },
   "slack": {
     "token": "SLACK_TOKEN",
-    "api": "SLACK_API"
+    "api": "SLACK_API",
+    "bot_username": "SLACK_BOT_USERNAME"
+  },
+  "redis": {
+    "host": "REDIS_HOST",
+    "port": "REDIS_PORT"
   }
 }
