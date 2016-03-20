@@ -4,8 +4,8 @@
   "description": "A Markov Chain bot that wants to get to know you.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- index.js",
+    "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon -w src --exec npm run babel-node -- server.js",
     "babel-node": "babel-node",
     "build": "babel src -d lib",
     "test": "NODE_ENV=test standard && mocha"
