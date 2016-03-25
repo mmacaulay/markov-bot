@@ -2,7 +2,7 @@ import config from 'config'
 import _ from 'lodash'
 import { RtmClient, WebClient, RTM_EVENTS } from '@slack/client'
 import learn from './learn'
-import { speak, speakAs, speakAbout, speakAsAbout } from './speak'
+import { sendMsg, speak, speakAs, speakAbout, speakAsAbout } from './speak'
 
 const token = config.slack.token
 const rtm = new RtmClient(token, { logLevel: config.slack.logLevel })
@@ -13,10 +13,10 @@ const web = new WebClient(token)
 let users = null
 let usersAge = null
 let myUsernameRe = null
-const whatWouldUserSayRe = /what would ([a-zA-Z0-9_-]+) say[?]?$/i
 const whatWouldUserIDSayRe = /what would <@([a-zA-Z0-9]+)> say[?]?$/i
-const whatWouldUserSayAboutRe = /what would ([a-zA-Z0-9_-]+) say about ([^?]*)[?]*/i
+const whatWouldUserSayRe = /what would (.+) say[?]?$/i
 const whatWouldUserIDSayAboutRe = /what would <@([a-zA-Z0-9]+)> say about ([^?]*)[?]*/i
+const whatWouldUserSayAboutRe = /what would (.+) say about ([^?]*)[?]*/i
 const tellMeAboutRe = /tell me about ([^?]*)/i
 
 function getUsers (callback) {
@@ -57,7 +57,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.id.toUpperCase() === userId.toUpperCase()
         })
-        if (!user) return
+        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}"`)
         const about = whatWouldUserIDSayAboutMatch[2]
         return speakAsAbout(message.channel, user, about)
       }
@@ -68,7 +68,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.name.toUpperCase() === username.toUpperCase()
         })
-        if (!user) return
+        if (!user) return sendMsg(message.channel, `I don't know any "${username}"`)
         const about = whatWouldUserSayAboutMatch[2]
         return speakAsAbout(message.channel, user, about)
       }
@@ -79,7 +79,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.id.toUpperCase() === userId.toUpperCase()
         })
-        if (!user) return
+        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}"`)
         return speakAs(message.channel, user)
       }
 
@@ -89,7 +89,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.name.toUpperCase() === username.toUpperCase()
         })
-        if (!user) return
+        if (!user) return sendMsg(message.channel, `I don't know any "${username}"`)
         return speakAs(message.channel, user)
       }
 

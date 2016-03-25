@@ -6,7 +6,7 @@ const web = new WebClient(config.slack.token)
 
 const qs = { order: config.slack.speak_order }
 
-function sendMsg (channel, msg) {
+export function sendMsg (channel, msg) {
   web.chat.postMessage(channel, msg, { as_user: true })
 }
 
