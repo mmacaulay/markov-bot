@@ -51,6 +51,13 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
     if (myUsernameRe.test(message.text)) {
       const command = message.text.replace(myUsernameRe, '').trim().toLowerCase()
 
+      if (command === 'help') {
+        return sendMsg(message.channel, `:information_desk_person: Here's what's up:\n
+        ":speech_balloon: what would <user> say?" - say something in the voice of <user>\n
+        ":speech_balloon: tell me about <thing>" - say something insightful about <thing>\n
+        ":speech_balloon: what would <user> say about <thing>?" - learn how <user> really feels about <thing>`)
+      }
+
       const whatWouldUserIDSayAboutMatch = whatWouldUserIDSayAboutRe.exec(command)
       if (whatWouldUserIDSayAboutMatch) {
         const userId = whatWouldUserIDSayAboutMatch[1]
