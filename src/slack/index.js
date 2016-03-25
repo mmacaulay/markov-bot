@@ -53,9 +53,12 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
 
       if (command === 'help') {
         return sendMsg(message.channel, [":information_desk_person: Here's what I can do:",
+        '*help* - this message',
         '*what would <user> say?* - say something in the voice of <user>',
         '*tell me about <thing>* - say something insightful about <thing>',
-        '*what would <user> say about <thing>?* - learn how <user> really feels about <thing>'].join('\n'))
+        '*what would <user> say about <thing>?* - learn how <user> really feels about <thing>',
+        "For anything else, I'll say something awesome of my own choosing! :smile:"
+        ].join('\n'))
       }
 
       const whatWouldUserIDSayAboutMatch = whatWouldUserIDSayAboutRe.exec(command)
