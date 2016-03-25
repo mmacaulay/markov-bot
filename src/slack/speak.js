@@ -20,7 +20,7 @@ export function speak (channel) {
     if (err) console.error(err)
     const text = res.body.data
     if (text) sendMsg(channel, text)
-    else sendMsg(channel, 'Hello... world!')
+    else sendMsg(channel, 'Hello... world! :wave:')
   })
 }
 
@@ -35,7 +35,7 @@ export function speakAs (channel, user) {
     if (err) console.error(err)
     const text = res.body.data
     if (text) sendMsg(channel, text)
-    else sendMsg(channel, `Looks like ${user.name} is a bit of a wallflower!`)
+    else sendMsg(channel, `Looks like ${user.name} is a bit of a wallflower! :hear_no_evil:`)
   })
 }
 
@@ -50,7 +50,7 @@ export function speakAbout (channel, about) {
     if (err) console.error(err)
     const text = res.body.data
     if (text) sendMsg(channel, text)
-    else sendMsg(channel, `"${about}"? Never heard of it.`)
+    else sendMsg(channel, `"${about}"? Never heard of it. :poop:`)
   })
 }
 
@@ -66,6 +66,6 @@ export function speakAsAbout (channel, user, about) {
     if (err) console.error(err)
     const text = res.body.data
     if (text) sendMsg(channel, text)
-    else sendMsg(channel, `${user.name} has nothing to say on the subject.`)
+    else sendMsg(channel, `${user.name} has nothing to say on the subject. :no_mouth:`)
   })
 }

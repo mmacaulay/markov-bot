@@ -52,10 +52,10 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
       const command = message.text.replace(myUsernameRe, '').trim().toLowerCase()
 
       if (command === 'help') {
-        return sendMsg(message.channel, [":information_desk_person: Here's what's up:",
-        ':speech_balloon: *what would <user> say?* - say something in the voice of <user>',
-        ':speech_balloon: *tell me about <thing>* - say something insightful about <thing>',
-        ':speech_balloon: *what would <user> say about <thing>?* - learn how <user> really feels about <thing>'].join('\n'))
+        return sendMsg(message.channel, [":information_desk_person: Here's what I can do:",
+        '*what would <user> say?* - say something in the voice of <user>',
+        '*tell me about <thing>* - say something insightful about <thing>',
+        '*what would <user> say about <thing>?* - learn how <user> really feels about <thing>'].join('\n'))
       }
 
       const whatWouldUserIDSayAboutMatch = whatWouldUserIDSayAboutRe.exec(command)
@@ -64,7 +64,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.id.toUpperCase() === userId.toUpperCase()
         })
-        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}"`)
+        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}"  :exclamation:`)
         const about = whatWouldUserIDSayAboutMatch[2]
         return speakAsAbout(message.channel, user, about)
       }
@@ -75,7 +75,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.name.toUpperCase() === username.toUpperCase()
         })
-        if (!user) return sendMsg(message.channel, `I don't know any "${username}"`)
+        if (!user) return sendMsg(message.channel, `I don't know any "${username}" :anguished:`)
         const about = whatWouldUserSayAboutMatch[2]
         return speakAsAbout(message.channel, user, about)
       }
@@ -86,7 +86,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.id.toUpperCase() === userId.toUpperCase()
         })
-        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}"`)
+        if (!user) return sendMsg(message.channel, `I don't know any user ID: "${userId}" :exclamation:`)
         return speakAs(message.channel, user)
       }
 
@@ -96,7 +96,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
         const user = _.find(users, (u) => {
           return u.name.toUpperCase() === username.toUpperCase()
         })
-        if (!user) return sendMsg(message.channel, `I don't know any "${username}"`)
+        if (!user) return sendMsg(message.channel, `I don't know any "${username}"  :anguished:`)
         return speakAs(message.channel, user)
       }
 
