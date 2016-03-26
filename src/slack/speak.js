@@ -4,13 +4,16 @@ import { WebClient } from '@slack/client'
 
 const web = new WebClient(config.slack.token)
 
-const qs = { order: config.slack.speak_order }
+function getDefaultQuery () {
+  return { order: config.slack.speak_order }
+}
 
 export function sendMsg (channel, msg) {
   web.chat.postMessage(channel, msg, { as_user: true })
 }
 
 export function speak (channel) {
+  const qs = getDefaultQuery()
   const req = {
     uri: `${config.slack.api}/speak`,
     qs: qs,
@@ -25,6 +28,7 @@ export function speak (channel) {
 }
 
 export function speakAs (channel, user) {
+  const qs = getDefaultQuery()
   qs.namespace = user.id
   const req = {
     uri: `${config.slack.api}/speak`,
@@ -40,6 +44,7 @@ export function speakAs (channel, user) {
 }
 
 export function speakAbout (channel, about) {
+  const qs = getDefaultQuery()
   qs.about = about
   const req = {
     uri: `${config.slack.api}/speak`,
@@ -55,6 +60,7 @@ export function speakAbout (channel, about) {
 }
 
 export function speakAsAbout (channel, user, about) {
+  const qs = getDefaultQuery()
   qs.namespace = user.id
   qs.about = about
   const req = {
