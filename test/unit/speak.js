@@ -223,4 +223,25 @@ describe('speakAbout', () => {
     ]
     async.series(fns, done)
   })
+  it('can create a sentence from a word that appeared at the end of a sentence', (done) => {
+    const fns = [
+      async.apply(redis.flushdb.bind(redis)),
+      async.apply(learn, 'This is fantastic', { namespaces: ['bob'], orders: [1, 2, 3] }),
+      function (cb) {
+        speakAbout('fantastic', (err, result) => {
+          if (err) return cb(err)
+          assert.equal(result, 'This is fantastic')
+          cb()
+        })
+      },
+      function (cb) {
+        speakAbout('fantastic', { order: 2 }, (err, result) => {
+          if (err) return cb(err)
+          assert.equal(result, 'This is fantastic')
+          cb()
+        })
+      }
+    ]
+    async.series(fns, done)
+  })
 })
