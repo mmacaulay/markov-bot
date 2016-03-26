@@ -148,6 +148,36 @@ describe('speakAbout', () => {
       done()
     })
   })
+  it('uses basic wildcards to attempt to find a match', (done) => {
+    const possibleSentences = [
+      "This cow thinks it's a dog.",
+      "The cow thinks it's a dog."
+    ]
+    async.times(100, (n, next) => {
+      speakAbout('ink', (err, result) => {
+        if (err) return done(err)
+        assert.isTrue(_.some(possibleSentences, (sentence) => {
+          return result === sentence
+        }), result)
+        next()
+      })
+    }, done)
+  })
+  it('uses word stems to attempt to find a match', (done) => {
+    const possibleSentences = [
+      "This cow thinks it's a dog.",
+      "The cow thinks it's a dog."
+    ]
+    async.times(100, (n, next) => {
+      speakAbout('thinking', (err, result) => {
+        if (err) return done(err)
+        assert.isTrue(_.some(possibleSentences, (sentence) => {
+          return result === sentence
+        }), result)
+        next()
+      })
+    }, done)
+  })
   it('can specify an order', (done) => {
     const possibleSentences = [
       'The cow jumped over the moon.',
