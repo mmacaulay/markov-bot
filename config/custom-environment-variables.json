@@ -11,7 +11,8 @@
   "slack": {
     "token": "SLACK_TOKEN",
     "api": "SLACK_API",
-    "bot_username": "SLACK_BOT_USERNAME"
+    "bot_username": "SLACK_BOT_USERNAME",
+    "speak_order": "SLACK_SPEAK_ORDER"
   },
   "redis": {
     "host": "REDIS_HOST",
