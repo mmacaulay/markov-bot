@@ -226,18 +226,39 @@ describe('speakAbout', () => {
   it('can create a sentence from a word that appeared at the end of a sentence', (done) => {
     const fns = [
       async.apply(redis.flushdb.bind(redis)),
-      async.apply(learn, 'This is fantastic', { namespaces: ['bob'], orders: [1, 2, 3] }),
+      async.apply(learn, 'Safari is the new IE', { namespaces: ['bob'], orders: [1, 2, 3] }),
       function (cb) {
-        speakAbout('fantastic', (err, result) => {
+        speakAbout('IE', (err, result) => {
           if (err) return cb(err)
-          assert.equal(result, 'This is fantastic')
+          assert.equal(result, 'Safari is the new IE')
           cb()
         })
       },
       function (cb) {
-        speakAbout('fantastic', { order: 2 }, (err, result) => {
+        speakAbout('IE', { order: 2 }, (err, result) => {
           if (err) return cb(err)
-          assert.equal(result, 'This is fantastic')
+          assert.equal(result, 'Safari is the new IE')
+          cb()
+        })
+      }
+    ]
+    async.series(fns, done)
+  })
+  it('can create a sentence from a word that appeared at the start of a sentence', (done) => {
+    const fns = [
+      async.apply(redis.flushdb.bind(redis)),
+      async.apply(learn, 'Safari is the new IE', { namespaces: ['bob'], orders: [1, 2, 3] }),
+      function (cb) {
+        speakAbout('Safari', (err, result) => {
+          if (err) return cb(err)
+          assert.equal(result, 'Safari is the new IE')
+          cb()
+        })
+      },
+      function (cb) {
+        speakAbout('Safari', { order: 2 }, (err, result) => {
+          if (err) return cb(err)
+          assert.equal(result, 'Safari is the new IE')
           cb()
         })
       }
