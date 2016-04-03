@@ -231,4 +231,71 @@ describe('db.elasticsearch', () => {
       ], done)
     })
   })
+
+  describe('nextStates', () => {
+    it('looks up a term and selects a random chain value from that term', (done) => {
+      store.storeState(terms[0], terms.slice(1, 3), {}, (err) => {
+        if (err) return done(err)
+        async.timesSeries(100, (n, next) => {
+          store.nextStates(terms[0], (err, states) => {
+            if (err) return next(err)
+            assert.isTrue(states[0].text === 'is' || states[0].text === 'fantastic')
+            next()
+          })
+        }, done)
+      })
+    })
+
+    it('returns an empty array if there is no chain', (done) => {
+      store.storeState(terms[0], [], {}, (err) => {
+        if (err) return done(err)
+        store.nextStates(terms[0], (err, states) => {
+          if (err) return done(err)
+          assert.deepEqual(states, [])
+          done()
+        })
+      })
+    })
+
+    it('returns an empty array if the term is not found', (done) => {
+      store.storeState(terms[0], [], {}, (err) => {
+        if (err) return done(err)
+        store.nextStates(terms[1], (err, states) => {
+          if (err) return done(err)
+          assert.deepEqual(states, [])
+          done()
+        })
+      })
+    })
+  })
+
+  describe('fuzzyMatch', () => {
+    it('searches for a term by text value', (done) => {
+      async.series([
+        async.apply(store.storeState, terms[0], null, {}),
+        async.apply(store.storeState, terms[1], null, {}),
+        async.apply(store.storeState, terms[2], null, {}),
+        async.apply(esClient.indices.flush.bind(esClient), { index: 'all-1' }),
+        ...['this', 'IS', 'fAntASTIC!'].map((text) => {
+          return function (cb) {
+            store.fuzzyMatch({ text: text }, (err, term) => {
+              if (err) return cb(err)
+              switch (text) {
+                case 'this':
+                  assert.equal(term.text, 'This')
+                  break
+                case 'IS':
+                  assert.equal(term.text, 'is')
+                  break
+                case 'fAntASTIC!':
+                  assert.equal(term.text, 'fantastic')
+                  break
+              }
+              cb()
+            })
+          }
+        })
+      ], done)
+    })
+  })
 })
