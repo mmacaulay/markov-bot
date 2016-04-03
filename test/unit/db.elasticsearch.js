@@ -7,32 +7,30 @@ import db from '../../src/db.elasticsearch'
 
 describe('db.elasticsearch', () => {
   const esClient = createClient()
+  let store
 
-  beforeEach((cb) => {
+  const terms = [{
+    text: 'This',
+    normal: 'this',
+    tag: 'Determiner'
+  }, {
+    text: 'is',
+    normal: 'is',
+    tag: 'Noun'
+  }, {
+    text: 'fantastic',
+    normal: 'fantastic',
+    tag: 'Adjective'
+  }]
+
+  beforeEach((done) => {
+    store = db('all', 1)
     esClient.indices.delete({
       index: '_all'
-    }, cb)
+    }, done)
   })
 
   describe('storeState', () => {
-    let store
-    const terms = [{
-      text: 'This',
-      normal: 'this',
-      tag: 'Determiner'
-    }, {
-      text: 'is',
-      normal: 'is',
-      tag: 'Noun'
-    }, {
-      text: 'fantastic',
-      normal: 'fantastic',
-      tag: 'Adjective'
-    }]
-    beforeEach(() => {
-      store = db('all', 1)
-    })
-
     it('stores terms', (done) => {
       store.storeState(terms[0], terms.slice(1, 2), {}, (err) => {
         if (err) return done(err)
@@ -106,7 +104,7 @@ describe('db.elasticsearch', () => {
     })
 
     it('creates chains for each next state', (done) => {
-      store.storeState(terms[0], terms.slice(1, 3), {}, (err) => {
+      store.storeState(terms[0], terms.slice(1, 2), {}, (err) => {
         if (err) return done(err)
         esClient.get({
           index: 'all-1',
@@ -118,16 +116,12 @@ describe('db.elasticsearch', () => {
           const chain = response._source.chain
           assert.deepEqual(chain, {
             'Noun☃is': {
-              text: 'is',
-              normal: 'is',
-              tag: 'Noun',
-              score: 1
-            },
-            'Adjective☃fantastic': {
-              text: 'fantastic',
-              normal: 'fantastic',
-              tag: 'Adjective',
-              score: 1
+              score: 1,
+              states: [{
+                text: 'is',
+                normal: 'is',
+                tag: 'Noun'
+              }]
             }
           })
           done()
@@ -137,7 +131,7 @@ describe('db.elasticsearch', () => {
 
     it('updates scores of chains for each next state', (done) => {
       async.timesSeries(2, (n, next) => {
-        store.storeState(terms[0], terms.slice(1, 3), {}, (err) => {
+        store.storeState(terms[0], terms.slice(1, 2), {}, (err) => {
           if (err) return next(err)
           esClient.get({
             index: 'all-1',
@@ -149,22 +143,69 @@ describe('db.elasticsearch', () => {
             const chain = response._source.chain
             assert.deepEqual(chain, {
               'Noun☃is': {
-                text: 'is',
-                normal: 'is',
-                tag: 'Noun',
-                score: n + 1
-              },
-              'Adjective☃fantastic': {
-                text: 'fantastic',
-                normal: 'fantastic',
-                tag: 'Adjective',
-                score: n + 1
+                score: n + 1,
+                states: [{
+                  text: 'is',
+                  normal: 'is',
+                  tag: 'Noun'
+                }]
               }
             })
             next()
           })
         })
       }, done)
+    })
+
+    it('creates chains for higher order chains', (done) => {
+      store = db('all', 2)
+      store.storeState(terms[0], terms.slice(1, 3), {}, (err) => {
+        if (err) return done(err)
+        esClient.get({
+          index: 'all-2',
+          type: 'term',
+          id: terms[0].text
+        }, (err, response) => {
+          if (err) return done(err)
+          assert.isTrue(response.found)
+          const chain = response._source.chain
+          assert.deepEqual(chain, {
+            'Noun☃is❄Adjective☃fantastic': {
+              score: 1,
+              states: [{
+                text: 'is',
+                normal: 'is',
+                tag: 'Noun'
+              }, {
+                text: 'fantastic',
+                normal: 'fantastic',
+                tag: 'Adjective'
+              }]
+            }
+          })
+          done()
+        })
+      })
+    })
+  })
+
+  describe('getStartTerm', () => {
+    it('fetches a random start term with a start score of at least 1', (done) => {
+      async.series([
+        async.apply(store.storeState, terms[0], null, { isStartTerm: true }),
+        async.apply(store.storeState, terms[1], null, { isStartTerm: false }),
+        async.apply(store.storeState, terms[2], null, { isStartTerm: true }),
+        async.apply(esClient.indices.flush.bind(esClient), { index: 'all-1' }),
+        function (cb) {
+          async.times(100, (n, next) => {
+            store.getStartTerm((err, term) => {
+              if (err) return next(err)
+              assert.isTrue(term.text === 'This' || term.text === 'fantastic')
+              next()
+            })
+          }, cb)
+        }
+      ], done)
     })
   })
 })

@@ -32,8 +32,9 @@ export default function getStore (prefix, order) {
       fns.push(async.apply(redis.sadd.bind(redis), startKey(), JSON.stringify(state)))
     }
 
+    fns.push(async.apply(redis.set.bind(redis), termKey(state), JSON.stringify(state)))
+
     if (nextStates && nextStates.length) {
-      fns.push(async.apply(redis.set.bind(redis), termKey(state), JSON.stringify(state)))
       fns.push(async.apply(redis.zincrby.bind(redis), contextKey(state), 1, JSON.stringify(nextStates)))
       fns.push(async.apply(redis.zincrby.bind(redis), contextLessKey(state), 1, JSON.stringify(nextStates)))
     }

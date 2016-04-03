@@ -1,7 +1,7 @@
 import async from 'async'
 import _ from 'lodash'
 import nlp from 'nlp_compromise'
-import db from './db'
+import db from './db.elasticsearch'
 
 function learnTerms (terms, order, namespace, callback) {
   const store = db(namespace, order)
@@ -50,7 +50,7 @@ export default function learn (text, opts, callback) {
   const namespaces = _.uniq(['all'].concat(opts.namespaces ? opts.namespaces : []))
 
   const sentences = nlp.text(text).sentences
-  async.parallel(sentences.map((sentence) => {
+  async.series(sentences.map((sentence) => {
     return async.apply(learnSentence, sentence, orders, namespaces)
   }), callback)
 }
