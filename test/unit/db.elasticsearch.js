@@ -37,7 +37,7 @@ describe('db.elasticsearch', () => {
         esClient.get({
           index: 'all-1',
           type: 'term',
-          id: terms[0].text
+          id: `${terms[0].tag}☃${terms[0].text}`
         }, (err, response) => {
           if (err) return done(err)
           assert.isTrue(response.found)
@@ -56,7 +56,7 @@ describe('db.elasticsearch', () => {
           esClient.get({
             index: 'all-1',
             type: 'term',
-            id: terms[0].text
+            id: `${terms[0].tag}☃${terms[0].text}`
           }, (err, response) => {
             if (err) return next(err)
             assert.isTrue(response.found)
@@ -74,7 +74,7 @@ describe('db.elasticsearch', () => {
           esClient.get({
             index: 'all-1',
             type: 'term',
-            id: terms[0].text
+            id: `${terms[0].tag}☃${terms[0].text}`
           }, (err, response) => {
             if (err) return next(err)
             assert.isTrue(response.found)
@@ -92,7 +92,7 @@ describe('db.elasticsearch', () => {
           esClient.get({
             index: 'all-1',
             type: 'term',
-            id: terms[0].text
+            id: `${terms[0].tag}☃${terms[0].text}`
           }, (err, response) => {
             if (err) return next(err)
             assert.isTrue(response.found)
@@ -109,7 +109,7 @@ describe('db.elasticsearch', () => {
         esClient.get({
           index: 'all-1',
           type: 'term',
-          id: terms[0].text
+          id: `${terms[0].tag}☃${terms[0].text}`
         }, (err, response) => {
           if (err) return done(err)
           assert.isTrue(response.found)
@@ -136,7 +136,7 @@ describe('db.elasticsearch', () => {
           esClient.get({
             index: 'all-1',
             type: 'term',
-            id: terms[0].text
+            id: `${terms[0].tag}☃${terms[0].text}`
           }, (err, response) => {
             if (err) return next(err)
             assert.isTrue(response.found)
@@ -164,7 +164,7 @@ describe('db.elasticsearch', () => {
         esClient.get({
           index: 'all-2',
           type: 'term',
-          id: terms[0].text
+          id: `${terms[0].tag}☃${terms[0].text}`
         }, (err, response) => {
           if (err) return done(err)
           assert.isTrue(response.found)
@@ -183,6 +183,29 @@ describe('db.elasticsearch', () => {
               }]
             }
           })
+          done()
+        })
+      })
+    })
+
+    it("replaces all instance of '.' with '_' in order to satisfy ES 2.0+ field requirements", (done) => {
+      const term = {
+        text: 'turtle...',
+        normal: 'turtle',
+        tag: 'Noun'
+      }
+      store.storeState(term, [], {}, (err) => {
+        if (err) return done(err)
+        esClient.get({
+          index: 'all-1',
+          type: 'term',
+          id: 'Noun☃turtle___'
+        }, (err, response) => {
+          if (err) return done(err)
+          assert.isTrue(response.found)
+          assert.equal(response._source.text, 'turtle...')
+          assert.equal(response._source.normal, 'turtle')
+          assert.equal(response._source.tag, 'Noun')
           done()
         })
       })

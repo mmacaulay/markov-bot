@@ -8,7 +8,7 @@ export default function getStore (prefix, order) {
 
   function termKey (term) {
     // ES 2.0+ doesn't allow '.' in field names
-    return `${term.tag}☃${term.text}`.replace('.', '_')
+    return `${term.tag}☃${term.text}`.replace(/\./g, '_')
   }
 
   function chainKey (terms) {
