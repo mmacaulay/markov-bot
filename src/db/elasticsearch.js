@@ -1,5 +1,5 @@
-import { createClient } from './elasticsearch'
-import { weightedRandom } from './math'
+import { createClient } from '../elasticsearch'
+import { weightedRandom } from '../math'
 
 const esClient = createClient()
 

@@ -1,7 +1,7 @@
 import async from 'async'
 import _ from 'lodash'
 import nlp from 'nlp_compromise'
-import db from './db.elasticsearch'
+import db from './db/elasticsearch'
 
 function learnTerms (terms, order, namespace, callback) {
   const store = db(namespace, order)

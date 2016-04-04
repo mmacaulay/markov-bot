@@ -2,10 +2,10 @@ import async from 'async'
 import { describe, it, beforeEach } from 'mocha'
 import { assert } from 'chai'
 
-import { createClient } from '../../src/elasticsearch'
-import db from '../../src/db.elasticsearch'
+import { createClient } from '../../../src/elasticsearch'
+import db from '../../../src/db/elasticsearch'
 
-describe('db.elasticsearch', () => {
+describe('db/elasticsearch', () => {
   const esClient = createClient()
   let store
 
