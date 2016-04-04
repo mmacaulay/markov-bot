@@ -1,4 +1,6 @@
 {
+  "dual_learning_mode": false,
+  "db": "redis",
   "redis": {
     "database": 1
   }

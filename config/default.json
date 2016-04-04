@@ -17,6 +17,7 @@
     "users_max_age": 86400000
   },
   "db": "redis",
+  "dual_learning_mode": true,
   "redis": {
     "host": "127.0.0.1",
     "port": 6379
