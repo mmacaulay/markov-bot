@@ -1,8 +1,7 @@
 import _ from 'lodash'
 import async from 'async'
-import db from './db'
 import nlp from 'nlp_compromise'
-import natural from 'natural'
+import db from './db'
 
 const defaultOpts = {
   order: 1,
@@ -57,7 +56,7 @@ export function speakAbout (thing, opts, callback) {
   opts = opts || {}
   const order = opts.order || 1
   const namespace = opts.namespace || 'all'
-  const term = nlp.term(natural.PorterStemmer.stem(thing))
+  const term = nlp.term(thing)
 
   const store = db(namespace, order)
   const reverseStore = db(`reverse:${namespace}`, order)

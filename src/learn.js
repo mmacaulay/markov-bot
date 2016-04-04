@@ -50,7 +50,7 @@ export default function learn (text, opts, callback) {
   const namespaces = _.uniq(['all'].concat(opts.namespaces ? opts.namespaces : []))
 
   const sentences = nlp.text(text).sentences
-  async.parallel(sentences.map((sentence) => {
+  async.series(sentences.map((sentence) => {
     return async.apply(learnSentence, sentence, orders, namespaces)
   }), callback)
 }

@@ -1,6 +1,8 @@
 import async from 'async'
-import redis from './redis'
-import { weightedRandom } from './math'
+import redis from '../redis'
+import nlp from 'nlp_compromise'
+import natural from 'natural'
+import { weightedRandom } from '../math'
 
 const startTermsKey = '__startterms__'
 
@@ -58,7 +60,7 @@ export default function getStore (prefix, order) {
       if (err) return callback(err)
       const collated = collateRangeResults(results)
       const weightedResult = weightedRandom(collated)
-      callback(null, weightedResult ? JSON.parse(weightedResult.states) : null)
+      callback(null, weightedResult ? JSON.parse(weightedResult.states) : [])
     })
   }
 
@@ -93,7 +95,8 @@ export default function getStore (prefix, order) {
   }
 
   function fuzzyMatch (term, callback) {
-    const key = scanKey(term)
+    const stemmedTerm = nlp.term(natural.PorterStemmer.stem(term.text))
+    const key = scanKey(stemmedTerm)
     scanForFirstMatch(key, 0, (err, result) => {
       if (err) return callback(err)
       if (result) {
@@ -102,7 +105,7 @@ export default function getStore (prefix, order) {
           callback(null, JSON.parse(termText))
         })
       } else {
-        callback()
+        callback(null, {})
       }
     })
   }
