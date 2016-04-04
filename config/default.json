@@ -16,6 +16,7 @@
     "bot_username": "markov_bot",
     "users_max_age": 86400000
   },
+  "db": "redis",
   "redis": {
     "host": "127.0.0.1",
     "port": 6379

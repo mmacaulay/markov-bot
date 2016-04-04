@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import async from 'async'
-import db from './db/elasticsearch'
 import nlp from 'nlp_compromise'
+import db from './db'
 
 const defaultOpts = {
   order: 1,
