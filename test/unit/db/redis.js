@@ -49,10 +49,10 @@ describe('db/redis', () => {
       })
     })
 
-    it('stores the term', (done) => {
+    it('stores the normalized term', (done) => {
       store.storeState(terms[0], null, {}, (err) => {
         if (err) return done(err)
-        redis.get('all:1:Determiner:This:terms', (err, response) => {
+        redis.get('all:1:Determiner:this:terms', (err, response) => {
           if (err) return done(err)
           const term = JSON.parse(response)
           assert.equal(term.text, 'This')
