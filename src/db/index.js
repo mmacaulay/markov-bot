@@ -1,5 +1,4 @@
 import config from 'config'
-import async from 'async'
 
 import es from './elasticsearch'
 import redis from './redis'
