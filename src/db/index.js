@@ -14,14 +14,5 @@ module.exports = function getStore (prefix, order) {
     store = redisStore
   }
 
-  if (config.dual_learning_mode) {
-    store.storeState = function storeState (state, nextStates, opts, callback) {
-      async.series([
-        async.apply(esStore.storeState, state, nextStates, opts),
-        async.apply(redisStore.storeState, state, nextStates, opts)
-      ], callback)
-    }
-  }
-
   return store
 }

@@ -18,6 +18,7 @@
     "host": "REDIS_HOST",
     "port": "REDIS_PORT"
   },
+  "db": "DB",
   "elasticsearch": {
     "host": "ELASTICSEARCH_HOST",
     "log_level": "ELASTICSEARCH_LOG_LEVEL"
