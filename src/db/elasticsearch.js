@@ -4,7 +4,7 @@ import { weightedRandom } from '../math'
 const esClient = createClient()
 
 export default function getStore (prefix, order) {
-  const index = `${prefix}-${order}`
+  const index = `${prefix}-${order}`.toLowerCase()
 
   function termKey (term) {
     // ES 2.0+ doesn't allow '.' in field names
