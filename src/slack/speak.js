@@ -9,6 +9,7 @@ function getDefaultQuery () {
 }
 
 export function sendMsg (channel, msg) {
+  msg = msg.replace(/&/, '&amp;').replace(/</, '&lt;').replace(/>/, '&gt;')
   web.chat.postMessage(channel, msg, { as_user: true })
 }
 

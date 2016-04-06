@@ -20,19 +20,20 @@ const whatWouldUserIDSayAboutRe = /what would <@([a-zA-Z0-9]+)> say about ([^?]*
 const whatWouldUserSayAboutRe = /what would (.+) say about ([^?]*)[?]*/i
 const tellMeAboutRe = /tell me about ([^?]*)/i
 
-const userPattern = /@[^\s]+/g
-const urlPattern = /http[s]?:\/\/[^\s]+/g
+const commandPattern = /<.+>/g
 
 function filterMessage (text) {
-  // Don't learn usernames or URLs
-  return text.replace(userPattern, '').replace(urlPattern, '')
+  // Don't learn slack commands
+  return text.replace(commandPattern, '')
 }
 
 function replaceUserIds (text, users) {
   let user
   let match = userIDRe.exec(text)
   while (match) {
-    user = _.find(users, { id: match[2] })
+    user = _.find(users, (u) => {
+      return u.id.toLowerCase() === match[2].toLowerCase()
+    })
     if (user) {
       text = text.replace(match[1], user.name)
     }
@@ -134,8 +135,8 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
       // default action when addressed is just speak.
       speak(message.channel)
     } else {
-      let filteredText = filterMessage(message.text)
-      filteredText = replaceUserIds(filteredText, users)
+      let filteredText = replaceUserIds(message.text, users)
+      filteredText = filterMessage(filteredText)
 
       // Skip empty messages
       if (!filteredText.replace(/\s+/g, '')) return
