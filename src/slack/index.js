@@ -13,11 +13,33 @@ const web = new WebClient(token)
 let users = null
 let usersAge = null
 let myUsernameRe = null
+const userIDRe = /(<@([a-zA-Z0-9]+)>)/
 const whatWouldUserIDSayRe = /what would <@([a-zA-Z0-9]+)> say[?]?$/i
 const whatWouldUserSayRe = /what would (.+) say[?]?$/i
 const whatWouldUserIDSayAboutRe = /what would <@([a-zA-Z0-9]+)> say about ([^?]*)[?]*/i
 const whatWouldUserSayAboutRe = /what would (.+) say about ([^?]*)[?]*/i
 const tellMeAboutRe = /tell me about ([^?]*)/i
+
+const userPattern = /@[^\s]+/g
+const urlPattern = /http[s]?:\/\/[^\s]+/g
+
+function filterMessage (text) {
+  // Don't learn usernames or URLs
+  return text.replace(userPattern, '').replace(urlPattern, '')
+}
+
+function replaceUserIds (text, users) {
+  let user
+  let match = userIDRe.exec(text)
+  while (match) {
+    user = _.find(users, { id: match[2] })
+    if (user) {
+      text = text.replace(match[1], user.name)
+    }
+    match = userIDRe.exec(text)
+  }
+  return text
+}
 
 function getUsers (callback) {
   const now = new Date().getTime()
@@ -112,7 +134,13 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
       // default action when addressed is just speak.
       speak(message.channel)
     } else {
-      learn(message)
+      let filteredText = filterMessage(message.text)
+      filteredText = replaceUserIds(filteredText, users)
+
+      // Skip empty messages
+      if (!filteredText.replace(/\s+/g, '')) return
+
+      learn(filteredText, message.user)
     }
   })
 })
