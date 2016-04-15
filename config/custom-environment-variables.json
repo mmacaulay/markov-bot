@@ -20,7 +20,7 @@
   },
   "db": "DB",
   "elasticsearch": {
-    "host": "ELASTICSEARCH_HOST",
+    "hosts": "ELASTICSEARCH_HOSTS",
     "log_level": "ELASTICSEARCH_LOG_LEVEL"
   }
 }
