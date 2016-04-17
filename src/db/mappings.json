@@ -1,0 +1,17 @@
+{
+  "order": 0,
+  "template": "*",
+  "settings": {},
+  "mappings": {
+    "term": {
+      "properties": {
+        "chain": {
+          "include_in_all": false,
+          "type": "nested",
+          "enabled": false
+        }
+      }
+    }
+  },
+  "aliases": {}
+}
