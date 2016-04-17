@@ -9,6 +9,7 @@ Prerequisites:
 * [Node.js](https://nodejs.org/en/download/) - version 4+
 * [npm](https://github.com/npm/npm) - version 3+
 * [Redis](http://redis.io/download) - tested against version 2.8, but probably works with older versions
+* [Elasticsearch](https://www.elastic.co/products/elasticsearch) - tested against version 2.2 and 2.3
 
 Clone this repo:
 
