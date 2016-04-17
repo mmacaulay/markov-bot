@@ -19,7 +19,7 @@ const whatWouldUserSayRe = /what would (.+) say[?]?$/i
 const whatWouldUserIDSayAboutRe = /what would <@([a-zA-Z0-9]+)> say about ([^?]*)[?]*/i
 const whatWouldUserSayAboutRe = /what would (.+) say about ([^?]*)[?]*/i
 const tellMeAboutRe = /tell me about ([^?]*)/i
-const addressingRe = /^\s*<@[a-zA-Z0-9]+>:\s*/
+const addressingRe = /^\s*<.+>:\s*/
 
 const commandPattern = /<.+>/g
 
