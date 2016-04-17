@@ -1,7 +1,7 @@
 import config from 'config'
 import _ from 'lodash'
 import { RtmClient, WebClient, RTM_EVENTS } from '@slack/client'
-// import learn from './learn'
+import learn from './learn'
 import { sendMsg, speak, speakAs, speakAbout, speakAsAbout } from './speak'
 
 const token = config.slack.token
@@ -140,18 +140,14 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
       // default action when addressed is just speak.
       speak(message.channel)
     } else {
-      console.log('original text', message.text)
       let filteredText = replaceAddressingMsgs(message.text)
-      console.log('filter step 1', filteredText)
       filteredText = replaceUserIds(filteredText, users)
-      console.log('filter step 2', filteredText)
       filteredText = filterMessage(filteredText)
-      console.log('filter step 3', filteredText)
 
       // Skip empty messages
       if (!filteredText.replace(/\s+/g, '')) return
 
-      // learn(filteredText, message.user)
+      learn(filteredText, message.user)
     }
   })
 })
