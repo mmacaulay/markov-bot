@@ -3,3 +3,4 @@ npm-debug.log
 log/
 lib/
 releases/*.zip
+.vscode/
